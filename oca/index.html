@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Juego de la Oca</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sky-background"></div>
+    <div class="clouds"></div>
+
+    <!-- Setup Screen Modal -->
+    <div id="setup-screen" class="screen active">
+        <div class="setup-container wooden-board">
+            <h1 class="game-title">🦆 El Juego de la Oca 🍀</h1>
+            <p class="subtitle">¡Prepara la partida!</p>
+            
+            <div class="config-row">
+                <div class="config-column">
+                    <label>Jugadores</label>
+                    <div class="toggle-group" id="players-toggle">
+                        <button class="toggle-btn selected" data-value="2">2</button>
+                        <button class="toggle-btn" data-value="3">3</button>
+                        <button class="toggle-btn" data-value="4">4</button>
+                    </div>
+                </div>
+
+                <div class="config-column">
+                    <label>Dados</label>
+                    <div class="toggle-group" id="dice-toggle">
+                        <button class="toggle-btn selected" data-value="1">1</button>
+                        <button class="toggle-btn" data-value="2">2</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="players-forms" class="players-list">
+                <!-- Inyectado por Javascript -->
+            </div>
+
+            <button id="start-btn" class="primary-btn green-btn">¡A Jugar!</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="top-bar">
+            <h2>🦆 LA OCA</h2>
+            <button id="restart-game-btn" class="icon-btn red-btn" title="Volver al Menú">✖</button>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="board-canvas"></canvas>
+            
+            <!-- Superposición de dados animada -->
+            <div id="dice-overlay" class="overlay hidden">
+                <div class="dice-container wooden-board">
+                    <div class="dice-wrapper">
+                        <div id="dice-1" class="dice">🎲</div>
+                        <div id="dice-2" class="dice hidden">🎲</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interfaz de mensajes dentro del tablero -->
+            <div id="message-overlay" class="overlay hidden">
+                <div class="message-box wooden-board">
+                    <h3 id="message-title">¡Zas!</h3>
+                    <p id="message-desc">Mensaje de turno.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de Control 'Pass & Play' -->
+        <div id="bottom-bar" class="bottom-bar">
+            <div class="turn-info wooden-board">
+                <div class="player-badge">
+                    <div id="current-player-avatar" class="avatar-box">
+                        <span id="current-player-skin">🦆</span>
+                    </div>
+                    <div class="player-meta">
+                        <span class="turn-label">TURNO DE:</span>
+                        <span id="current-player-name" class="name-label">Jugador 1</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="roll-btn" class="action-btn">
+                <span class="btn-text">TIRAR</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
