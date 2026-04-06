@@ -1,5 +1,6 @@
 // ==========================================
-// EL JUEGO DE LA OCA - LÓGICA V4 (FLAT VECTOR & AUTO-FIT)
+// EL JUEGO DE LA OCA - FINAL DEFINITIVE EDITION
+// (Virtual Camera & Perfect Geometry Spiral)
 // ==========================================
 
 const UI = {
@@ -21,8 +22,10 @@ const UI = {
 };
 
 const SKINS = ['🦆', '🐸', '🦄', '🐶', '🐱', '🦖', '🐻', '🐼', '🦊', '🐢'];
-const COLORS = ['#FF5252', '#42A5F5', '#66BB6A', '#FFA726'];
+const COLORS = ['#F44336', '#2196F3', '#4CAF50', '#FF9800'];
 const BOARD_SIZE = 63;
+const VIRTUAL_SIZE = 1000;
+
 const SPECIAL_SQUARES = {
     5: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 9, extraTurn: true },
     9: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 14, extraTurn: true },
@@ -36,19 +39,16 @@ const SPECIAL_SQUARES = {
     45: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 50, extraTurn: true },
     50: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 54, extraTurn: true },
     54: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 59, extraTurn: true },
-    59: { type: 'OCA', title: 'Oca', desc: 'Casi llegas...', target: 63, extraTurn: false },
-    6: { type: 'PUENTE', title: 'Puente', desc: 'La corriente te lleva', target: 12, extraTurn: true },
-    12: { type: 'PUENTE', title: 'Puente', desc: 'La corriente te lleva', target: 6, extraTurn: true },
+    59: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 63, extraTurn: false },
+    6: { type: 'PUENTE', title: 'Puente', desc: 'Saltas al otro puente', target: 12, extraTurn: true },
+    12: { type: 'PUENTE', title: 'Puente', desc: 'Saltas al puente 6', target: 6, extraTurn: true },
     19: { type: 'POSADA', title: 'Posada 🛌', desc: 'Descansas un turno', skipTurns: 1 },
-    31: { type: 'POZO', title: 'Pozo 🕳️', desc: 'Esperas a otro jugador', block: true },
-    42: { type: 'LABERINTO', title: 'Laberinto 🌀', desc: 'Retrocedes al 30', target: 30 },
+    31: { type: 'POZO', title: 'Pozo 🕳️', desc: 'Atrapado hasta que vengan', block: true },
+    42: { type: 'LABERINTO', title: 'Laberinto 🌀', desc: 'Te pierdes. Al 30', target: 30 },
     52: { type: 'CARCEL', title: 'Cárcel ⛓️', desc: 'Pierdes 2 turnos', skipTurns: 2 },
-    58: { type: 'CALAVERA', title: 'Calavera 💀', desc: 'Mueres. Vas al Inicio', target: 1 }
+    58: { type: 'CALAVERA', title: 'Calavera 💀', desc: 'Al inicio.', target: 1 }
 };
 
-// ==========================================
-// STATE ENGINE
-// ==========================================
 let GameState = {
     phase: 'SETUP',
     numPlayers: 2,
@@ -133,7 +133,7 @@ function startGame() {
     initBoard();
     updateHUD();
     
-    // Position Pieces initial
+    // Position Pieces
     GameState.players.forEach(p => {
         const cell = GameState.boardCells[1];
         if(cell) { p.visualPos.x = cell.x; p.visualPos.y = cell.y; }
@@ -143,74 +143,70 @@ function startGame() {
 }
 
 // ==========================================
-// DYNAMIC GRID GENERATION (16:9 FIX & Ratios)
+// VIRTUAL CAMERA SPIRAL MAP (100% Unbreakable geometry)
 // ==========================================
 const ctx = UI.boardCanvas.getContext('2d', { alpha: false });
-let width, height;
 
 function initBoard() {
-    const resize = () => {
-        width = UI.boardCanvas.clientWidth * window.devicePixelRatio;
-        height = UI.boardCanvas.clientHeight * window.devicePixelRatio;
-        UI.boardCanvas.width = width;
-        UI.boardCanvas.height = height;
-        generateDynamicMap();
-        
-        // Critical Resize Tracking Bug Fix:
-        // Force snap properties to their new cells immediately 
-        // to prevent piece floating when device rotates/window sizes.
-        if (GameState.phase === 'IDLE') {
-            GameState.players.forEach(p => {
-                const cell = GameState.boardCells[p.pos];
-                if(cell) { p.visualPos.x = cell.x; p.visualPos.y = cell.y; }
-            });
-        }
-    };
-    window.addEventListener('resize', resize);
-    resize();
+    // 1. Establish Virtual Size. 
+    // The CSS logic dynamically scales this virtual box without altering our pixels or coordinates.
+    UI.boardCanvas.width = VIRTUAL_SIZE;
+    UI.boardCanvas.height = VIRTUAL_SIZE;
+    
+    generateSquareSpiral();
 }
 
-function generateDynamicMap() {
+function generateSquareSpiral() {
     GameState.boardCells = [];
     GameState.boardCells[0] = null;
 
-    const padding = 20 * window.devicePixelRatio;
-    const w = width - padding * 2;
-    const h = height - padding * 2;
+    // An 8x8 Concentric Grid perfectly fits exactly 64 items (63 is our target)
+    const GRID_SIZE = 8; 
+    const padding = 20; // Internal padding
+    const innerSize = VIRTUAL_SIZE - padding * 2;
+    const cellSize = innerSize / GRID_SIZE;
     
-    // Auto-calculating exact columns matching aspect ratio
-    const screenRatio = w / h;
-    let computedCols = Math.max(3, Math.round(Math.sqrt(BOARD_SIZE * screenRatio)));
-    let computedRows = Math.ceil(BOARD_SIZE / computedCols);
-    
-    // Ensure we have enough total cells
-    while (computedCols * computedRows < BOARD_SIZE) computedRows++;
-    
-    const cellSize = Math.min(w / computedCols, h / computedRows);
-    const trueW = cellSize * computedCols;
-    const trueH = cellSize * computedRows;
-    const startX = padding + (w - trueW) / 2;
-    // Align vertically
-    const startY = padding + (h - trueH) / 2;
+    const startX = padding;
+    const startY = padding;
 
-    let r = computedRows - 1;
-    let c = 0;
-    let dirX = 1;
+    // Spiral tracking bounds
+    let minR = 0, maxR = 7, minC = 0, maxC = 7;
+    // We start visually around the Bottom-Left
+    let r = 7, c = 0;
+    // Move Right initially
+    let dirX = 1, dirY = 0;
 
     for (let i = 1; i <= BOARD_SIZE; i++) {
         GameState.boardCells[i] = {
             id: i,
-            x: startX + c * cellSize + cellSize/2,
-            y: startY + r * cellSize + cellSize/2,
-            radius: cellSize * 0.40
+            x: startX + c * cellSize + cellSize / 2,
+            y: startY + r * cellSize + cellSize / 2,
+            radius: cellSize * 0.42 
         };
         
-        c += dirX;
-        if (c >= computedCols || c < 0) {
-            dirX *= -1; 
-            c += dirX; 
-            r--; 
+        let nextC = c + dirX;
+        let nextR = r + dirY;
+        
+        if (nextC > maxC || nextC < minC || nextR > maxR || nextR < minR) {
+            // Turn Action
+            if (dirX === 1 && dirY === 0) { 
+                dirX = 0; dirY = -1; maxR--;  // Hit right bound -> Turn Up
+            }      
+            else if (dirX === 0 && dirY === -1) { 
+                dirX = -1; dirY = 0; maxC--;  // Hit top bound -> Turn Left
+            } 
+            else if (dirX === -1 && dirY === 0) { 
+                dirX = 0; dirY = 1; minR++;   // Hit left bound -> Turn Down
+            } 
+            else if (dirX === 0 && dirY === 1) { 
+                dirX = 1; dirY = 0; minC++;   // Hit bottom bound -> Turn Right
+            }  
+            
+            nextC = c + dirX;
+            nextR = r + dirY;
         }
+        c = nextC;
+        r = nextR;
     }
 }
 
@@ -225,7 +221,7 @@ UI.rollBtn.addEventListener('click', () => {
     
     if (player.skipTurns > 0) {
         player.skipTurns--;
-        showMessage('Durmiendo 💤', `${player.name} pierde este turno.`);
+        showMessage('Zzz...', `${player.name} pierde este turno.`);
         return setTimeout(() => { hideMessage(); passTurn(); }, 1500);
     }
     
@@ -262,9 +258,9 @@ function rollDice() {
             setTimeout(() => {
                 UI.diceOverlay.classList.add('hidden');
                 movePlayer(result);
-            }, 600);
+            }, 500);
         }
-    }, 80);
+    }, 60);
 }
 
 function updateHUD() {
@@ -274,13 +270,13 @@ function updateHUD() {
     document.getElementById('current-player-name').textContent = player.name;
     
     UI.rollBtn.style.backgroundColor = player.color;
-    UI.rollBtn.style.borderColor = '#424242'; // Neutral thick border
+    UI.rollBtn.style.borderColor = '#1E2A38'; 
     UI.rollBtn.classList.remove('disabled');
     
     if(player.skipTurns > 0 || player.isBlocked) {
-       UI.rollBtn.querySelector('.btn-text').textContent = 'SALTAR';
+       UI.rollBtn.querySelector('.btn-text').textContent = 'SALTAR TURNO';
     } else {
-       UI.rollBtn.querySelector('.btn-text').textContent = 'TIRAR';
+       UI.rollBtn.querySelector('.btn-text').textContent = 'TIRAR DADOS';
     }
 }
 
@@ -332,6 +328,7 @@ function resolveCellSquare(cellIndex) {
     player.pos = cellIndex;
     animatingPlayer = null;
     
+    // Pozo release
     GameState.players.forEach(p => {
         if (p !== player && p.pos === 31 && cellIndex === 31) p.isBlocked = false;
     });
@@ -343,7 +340,7 @@ function resolveCellSquare(cellIndex) {
             hideMessage();
             if (rule.target) {
                 animatingPlayer = player;
-                activePath = [rule.target]; // Teleport
+                activePath = [rule.target]; // Direct Teleport Frame
                 pathIndex = 0;
                 currentTargetCallback = () => {
                     player.pos = rule.target;
@@ -357,13 +354,13 @@ function resolveCellSquare(cellIndex) {
                 if (rule.extraTurn) { GameState.phase = 'IDLE'; updateHUD(); } 
                 else { passTurn(); }
             }
-        }, 1800);
+        }, 1500); // Shorter pause
     } else {
         passTurn();
     }
 }
 
-// Helpers
+// UI Helpers
 function showMessage(title, desc, persistent = false) {
     UI.messageTitle.textContent = title;
     UI.messageDesc.textContent = desc;
@@ -374,7 +371,7 @@ function hideMessage() {
 }
 
 // ==========================================
-// RENDER LOOP & FLAT VECTOR GRAPHICS
+// RENDER LOOP
 // ==========================================
 let lastTime = 0;
 
@@ -382,13 +379,14 @@ function renderLoop(time) {
     const dt = Math.min((time - lastTime) / 1000, 0.1);
     lastTime = time;
 
-    ctx.clearRect(0, 0, width, height);
+    // The canvas is fully opaque via CSS background-color, but we clear anyway
+    ctx.clearRect(0, 0, VIRTUAL_SIZE, VIRTUAL_SIZE);
 
-    // Thick Solid Vectors Lines (Flat Aesthetic)
+    // Dibuja la línea de trazado
     if (GameState.boardCells.length > 2) {
         ctx.beginPath();
         ctx.strokeStyle = '#D7CCC8';
-        ctx.lineWidth = 30 * window.devicePixelRatio;
+        ctx.lineWidth = 35;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
         ctx.moveTo(GameState.boardCells[1].x, GameState.boardCells[1].y);
@@ -398,10 +396,10 @@ function renderLoop(time) {
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.strokeStyle = '#8D6E63';
-        ctx.lineWidth = 6 * window.devicePixelRatio;
+        ctx.strokeStyle = '#A1887F';
+        ctx.lineWidth = 6;
         ctx.lineJoin = 'round';
-        ctx.setLineDash([15 * window.devicePixelRatio, 20 * window.devicePixelRatio]);
+        ctx.setLineDash([15, 20]);
         ctx.moveTo(GameState.boardCells[1].x, GameState.boardCells[1].y);
         for (let i = 2; i <= BOARD_SIZE; i++) {
             ctx.lineTo(GameState.boardCells[i].x, GameState.boardCells[i].y);
@@ -410,7 +408,7 @@ function renderLoop(time) {
         ctx.setLineDash([]);
     }
 
-    // Dibujar Casillas Flat con bordes definidos
+    // Dibujar Casillas
     for (let i = 1; i <= BOARD_SIZE; i++) {
         const cell = GameState.boardCells[i];
         if (!cell) continue;
@@ -418,26 +416,26 @@ function renderLoop(time) {
         ctx.beginPath();
         ctx.arc(cell.x, cell.y, cell.radius, 0, Math.PI * 2);
         
-        let color = '#FFF9C4'; // Default Base
-        let bColor = '#FF9800'; // Default Border
+        let color = '#FFF9C4'; 
+        let bColor = '#FBC02D'; 
         
         if (i === 1) { color = '#A5D6A7'; bColor = '#388E3C'; }
-        else if (i === BOARD_SIZE) { color = '#FFE082'; bColor = '#F57F17'; }
+        else if (i === BOARD_SIZE) { color = '#FFE082'; bColor = '#FF8F00'; }
         else if (SPECIAL_SQUARES[i]) {
-             if (SPECIAL_SQUARES[i].type === 'OCA') { color = '#FFCC80'; bColor = '#E65100'; }
+             if (SPECIAL_SQUARES[i].type === 'OCA') { color = '#FFCC80'; bColor = '#EF6C00'; }
              else if (SPECIAL_SQUARES[i].type === 'PUENTE') { color = '#81D4FA'; bColor = '#0288D1'; }
-             else if (SPECIAL_SQUARES[i].type === 'CALAVERA') { color = '#EEEEEE'; bColor = '#616161'; }
-             else { color = '#CE93D8'; bColor = '#8E24AA'; }
+             else if (SPECIAL_SQUARES[i].type === 'CALAVERA') { color = '#EEEEEE'; bColor = '#424242'; }
+             else { color = '#CE93D8'; bColor = '#8E24AA'; } // Posadas, carcel, etc.
         }
 
         ctx.fillStyle = color;
         ctx.fill();
         ctx.strokeStyle = bColor;
-        ctx.lineWidth = 5 * window.devicePixelRatio;
+        ctx.lineWidth = 6;
         ctx.stroke();
 
         ctx.fillStyle = '#4E342E';
-        const fontSize = cell.radius * 0.85;
+        const fontSize = cell.radius * 0.8;
         ctx.font = `bold ${fontSize}px Fredoka, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -456,30 +454,30 @@ function renderLoop(time) {
         ctx.fillText(dispText, cell.x, cell.y + (dispText == i ? 3 : 0));
     }
 
-    // Process Animations Linear
+    // Animación de jugadores (Velocidad constante ajustada al Virtual Space)
     if (animatingPlayer && activePath.length > 0) {
         const targetInd = activePath[pathIndex];
         const targetCell = GameState.boardCells[targetInd];
         
         if(targetCell) {
-            const speed = 12 * dt; 
+            const speed = 600 * dt; // Units per second
             const dx = targetCell.x - animatingPlayer.visualPos.x;
             const dy = targetCell.y - animatingPlayer.visualPos.y;
             const dist = Math.sqrt(dx*dx + dy*dy);
             
-            if (dist < 4 * window.devicePixelRatio) {
+            if (dist < 10) {
                 animatingPlayer.visualPos.x = targetCell.x;
                 animatingPlayer.visualPos.y = targetCell.y;
                 pathIndex++;
                 if (pathIndex >= activePath.length) currentTargetCallback();
             } else {
-                animatingPlayer.visualPos.x += dx * speed;
-                animatingPlayer.visualPos.y += dy * speed;
+                animatingPlayer.visualPos.x += (dx / dist) * speed;
+                animatingPlayer.visualPos.y += (dy / dist) * speed;
             }
         }
     }
 
-    // Dibujar Skins Flat en el tablero
+    // Dibujar Fichas (Skins) con colisiones visuales
     const grouped = {};
     GameState.players.forEach(p => {
         const posKey = p === animatingPlayer ? 'anim' : p.pos;
@@ -489,7 +487,7 @@ function renderLoop(time) {
 
     GameState.players.forEach(p => {
         let {x, y} = p.visualPos;
-        let pSize = 18 * window.devicePixelRatio;
+        let pSize = 24;
 
         const myGroup = p === animatingPlayer ? [] : grouped[p.pos];
         if (myGroup && myGroup.length > 1) {
@@ -506,7 +504,7 @@ function renderLoop(time) {
         ctx.arc(x, y, pSize, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.fill();
-        ctx.lineWidth = 4 * window.devicePixelRatio;
+        ctx.lineWidth = 5;
         ctx.strokeStyle = '#FFFFFF';
         ctx.stroke();
 
@@ -518,5 +516,5 @@ function renderLoop(time) {
     requestAnimationFrame(renderLoop);
 }
 
-// Boot UI
+// Iniciar app
 initSetup();
