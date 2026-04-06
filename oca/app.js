@@ -1,6 +1,5 @@
 // ==========================================
-// EL JUEGO DE LA OCA - FINAL DEFINITIVE EDITION
-// (Virtual Camera & Perfect Geometry Spiral)
+// EL JUEGO DE LA OCA - FINAL CUTE EDITION
 // ==========================================
 
 const UI = {
@@ -22,31 +21,31 @@ const UI = {
 };
 
 const SKINS = ['🦆', '🐸', '🦄', '🐶', '🐱', '🦖', '🐻', '🐼', '🦊', '🐢'];
-const COLORS = ['#F44336', '#2196F3', '#4CAF50', '#FF9800'];
+const COLORS = ['#FF5252', '#29B6F6', '#66BB6A', '#FFB74D'];
 const BOARD_SIZE = 63;
 const VIRTUAL_SIZE = 1000;
 
 const SPECIAL_SQUARES = {
-    5: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 9, extraTurn: true },
-    9: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 14, extraTurn: true },
-    14: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 18, extraTurn: true },
-    18: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 23, extraTurn: true },
-    23: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 27, extraTurn: true },
-    27: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 32, extraTurn: true },
-    32: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 36, extraTurn: true },
-    36: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 41, extraTurn: true },
-    41: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 45, extraTurn: true },
-    45: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 50, extraTurn: true },
-    50: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 54, extraTurn: true },
-    54: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 59, extraTurn: true },
-    59: { type: 'OCA', title: 'Oca', desc: 'Tiras porque te toca', target: 63, extraTurn: false },
-    6: { type: 'PUENTE', title: 'Puente', desc: 'Saltas al otro puente', target: 12, extraTurn: true },
-    12: { type: 'PUENTE', title: 'Puente', desc: 'Saltas al puente 6', target: 6, extraTurn: true },
-    19: { type: 'POSADA', title: 'Posada 🛌', desc: 'Descansas un turno', skipTurns: 1 },
-    31: { type: 'POZO', title: 'Pozo 🕳️', desc: 'Atrapado hasta que vengan', block: true },
-    42: { type: 'LABERINTO', title: 'Laberinto 🌀', desc: 'Te pierdes. Al 30', target: 30 },
-    52: { type: 'CARCEL', title: 'Cárcel ⛓️', desc: 'Pierdes 2 turnos', skipTurns: 2 },
-    58: { type: 'CALAVERA', title: 'Calavera 💀', desc: 'Al inicio.', target: 1 }
+    5: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 9, extraTurn: true },
+    9: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 14, extraTurn: true },
+    14: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 18, extraTurn: true },
+    18: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 23, extraTurn: true },
+    23: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 27, extraTurn: true },
+    27: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 32, extraTurn: true },
+    32: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 36, extraTurn: true },
+    36: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 41, extraTurn: true },
+    41: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 45, extraTurn: true },
+    45: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 50, extraTurn: true },
+    50: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 54, extraTurn: true },
+    54: { type: 'OCA', title: '¡Súper Oca! 🦆', desc: 'Sigue saltando...', target: 59, extraTurn: true },
+    59: { type: 'OCA', title: '¡Oca!', desc: 'Ya casi eres el rey', target: 63, extraTurn: false },
+    6: { type: 'PUENTE', title: '¡Puente Mágico! 🌈', desc: 'Vuelas al otro', target: 12, extraTurn: true },
+    12: { type: 'PUENTE', title: '¡Puente Mágico! 🌈', desc: 'Vuelas al otro', target: 6, extraTurn: true },
+    19: { type: 'POSADA', title: 'La Camita 💤', desc: 'Duermes un ratito', skipTurns: 1 },
+    31: { type: 'POZO', title: 'Pozo Profundo 🕳️', desc: 'Sálvame porfiiii...', block: true },
+    42: { type: 'LABERINTO', title: 'Laberinto 😵', desc: 'Uops, te mareaste', target: 30 },
+    52: { type: 'CARCEL', title: 'Jaula ⛓️', desc: 'Atrapado dos turnos', skipTurns: 2 },
+    58: { type: 'CALAVERA', title: '¡Pum! 💥', desc: 'A empezar de cero', target: 1 }
 };
 
 let GameState = {
@@ -133,7 +132,6 @@ function startGame() {
     initBoard();
     updateHUD();
     
-    // Position Pieces
     GameState.players.forEach(p => {
         const cell = GameState.boardCells[1];
         if(cell) { p.visualPos.x = cell.x; p.visualPos.y = cell.y; }
@@ -143,16 +141,13 @@ function startGame() {
 }
 
 // ==========================================
-// VIRTUAL CAMERA SPIRAL MAP (100% Unbreakable geometry)
+// VIRTUAL CAMERA SPIRAL MAP
 // ==========================================
 const ctx = UI.boardCanvas.getContext('2d', { alpha: false });
 
 function initBoard() {
-    // 1. Establish Virtual Size. 
-    // The CSS logic dynamically scales this virtual box without altering our pixels or coordinates.
     UI.boardCanvas.width = VIRTUAL_SIZE;
     UI.boardCanvas.height = VIRTUAL_SIZE;
-    
     generateSquareSpiral();
 }
 
@@ -160,20 +155,16 @@ function generateSquareSpiral() {
     GameState.boardCells = [];
     GameState.boardCells[0] = null;
 
-    // An 8x8 Concentric Grid perfectly fits exactly 64 items (63 is our target)
     const GRID_SIZE = 8; 
-    const padding = 20; // Internal padding
+    const padding = 25; 
     const innerSize = VIRTUAL_SIZE - padding * 2;
     const cellSize = innerSize / GRID_SIZE;
     
     const startX = padding;
     const startY = padding;
 
-    // Spiral tracking bounds
     let minR = 0, maxR = 7, minC = 0, maxC = 7;
-    // We start visually around the Bottom-Left
     let r = 7, c = 0;
-    // Move Right initially
     let dirX = 1, dirY = 0;
 
     for (let i = 1; i <= BOARD_SIZE; i++) {
@@ -181,26 +172,17 @@ function generateSquareSpiral() {
             id: i,
             x: startX + c * cellSize + cellSize / 2,
             y: startY + r * cellSize + cellSize / 2,
-            radius: cellSize * 0.42 
+            radius: cellSize * 0.44  // Extra fluffy fat cells
         };
         
         let nextC = c + dirX;
         let nextR = r + dirY;
         
         if (nextC > maxC || nextC < minC || nextR > maxR || nextR < minR) {
-            // Turn Action
-            if (dirX === 1 && dirY === 0) { 
-                dirX = 0; dirY = -1; maxR--;  // Hit right bound -> Turn Up
-            }      
-            else if (dirX === 0 && dirY === -1) { 
-                dirX = -1; dirY = 0; maxC--;  // Hit top bound -> Turn Left
-            } 
-            else if (dirX === -1 && dirY === 0) { 
-                dirX = 0; dirY = 1; minR++;   // Hit left bound -> Turn Down
-            } 
-            else if (dirX === 0 && dirY === 1) { 
-                dirX = 1; dirY = 0; minC++;   // Hit bottom bound -> Turn Right
-            }  
+            if (dirX === 1 && dirY === 0) { dirX = 0; dirY = -1; maxR--; }      
+            else if (dirX === 0 && dirY === -1) { dirX = -1; dirY = 0; maxC--; } 
+            else if (dirX === -1 && dirY === 0) { dirX = 0; dirY = 1; minR++; } 
+            else if (dirX === 0 && dirY === 1) { dirX = 1; dirY = 0; minC++; }  
             
             nextC = c + dirX;
             nextR = r + dirY;
@@ -221,12 +203,12 @@ UI.rollBtn.addEventListener('click', () => {
     
     if (player.skipTurns > 0) {
         player.skipTurns--;
-        showMessage('Zzz...', `${player.name} pierde este turno.`);
+        showMessage('Durmiendo... 💤', `${player.name} pasa el turno.`);
         return setTimeout(() => { hideMessage(); passTurn(); }, 1500);
     }
     
     if (player.isBlocked) {
-        showMessage('En el Pozo 🕳️', `Alguien debe caer para rescatar a ${player.name}.`);
+        showMessage('Pozo Atrapador 🕳️', `Alguien te tiene que salvar.`);
         return setTimeout(() => { hideMessage(); passTurn(); }, 1500);
     }
 
@@ -258,9 +240,9 @@ function rollDice() {
             setTimeout(() => {
                 UI.diceOverlay.classList.add('hidden');
                 movePlayer(result);
-            }, 500);
+            }, 600);
         }
-    }, 60);
+    }, 70);
 }
 
 function updateHUD() {
@@ -270,20 +252,22 @@ function updateHUD() {
     document.getElementById('current-player-name').textContent = player.name;
     
     UI.rollBtn.style.backgroundColor = player.color;
-    UI.rollBtn.style.borderColor = '#1E2A38'; 
+    // Bubbly soft outline
+    UI.rollBtn.style.borderColor = '#FFF'; 
+    UI.rollBtn.style.boxShadow = '0 6px 15px rgba(0,0,0,0.1), 0 0 0 4px ' + player.color; 
     UI.rollBtn.classList.remove('disabled');
     
     if(player.skipTurns > 0 || player.isBlocked) {
-       UI.rollBtn.querySelector('.btn-text').textContent = 'SALTAR TURNO';
+       UI.rollBtn.querySelector('.btn-text').textContent = 'PASAR';
     } else {
-       UI.rollBtn.querySelector('.btn-text').textContent = 'TIRAR DADOS';
+       UI.rollBtn.querySelector('.btn-text').textContent = '¡A JUGAR!';
     }
 }
 
 function passTurn() {
     const win = GameState.players.find(p => p.pos === 63);
     if(win) {
-        showMessage('¡GANADOR!', `¡Felicidades ${win.name} 🏆!`, true);
+        showMessage('¡TÚ GANAS!', `¡Hurra por ${win.name} 🏆!`, true);
         GameState.phase = 'END';
         UI.rollBtn.classList.add('disabled');
         return;
@@ -328,7 +312,6 @@ function resolveCellSquare(cellIndex) {
     player.pos = cellIndex;
     animatingPlayer = null;
     
-    // Pozo release
     GameState.players.forEach(p => {
         if (p !== player && p.pos === 31 && cellIndex === 31) p.isBlocked = false;
     });
@@ -340,7 +323,7 @@ function resolveCellSquare(cellIndex) {
             hideMessage();
             if (rule.target) {
                 animatingPlayer = player;
-                activePath = [rule.target]; // Direct Teleport Frame
+                activePath = [rule.target]; 
                 pathIndex = 0;
                 currentTargetCallback = () => {
                     player.pos = rule.target;
@@ -354,13 +337,12 @@ function resolveCellSquare(cellIndex) {
                 if (rule.extraTurn) { GameState.phase = 'IDLE'; updateHUD(); } 
                 else { passTurn(); }
             }
-        }, 1500); // Shorter pause
+        }, 1600); 
     } else {
         passTurn();
     }
 }
 
-// UI Helpers
 function showMessage(title, desc, persistent = false) {
     UI.messageTitle.textContent = title;
     UI.messageDesc.textContent = desc;
@@ -371,7 +353,7 @@ function hideMessage() {
 }
 
 // ==========================================
-// RENDER LOOP
+// RENDER LOOP (CUTE & BUBBLY GRAPHICS)
 // ==========================================
 let lastTime = 0;
 
@@ -379,14 +361,17 @@ function renderLoop(time) {
     const dt = Math.min((time - lastTime) / 1000, 0.1);
     lastTime = time;
 
-    // The canvas is fully opaque via CSS background-color, but we clear anyway
-    ctx.clearRect(0, 0, VIRTUAL_SIZE, VIRTUAL_SIZE);
+    // Draw bright background for canvas
+    ctx.fillStyle = '#E1F5FE'; // Light baby blue
+    ctx.beginPath();
+    ctx.roundRect(0, 0, VIRTUAL_SIZE, VIRTUAL_SIZE, 30);
+    ctx.fill();
 
-    // Dibuja la línea de trazado
+    // Dibuja la línea gorda y redonda
     if (GameState.boardCells.length > 2) {
         ctx.beginPath();
-        ctx.strokeStyle = '#D7CCC8';
-        ctx.lineWidth = 35;
+        ctx.strokeStyle = '#B3E5FC'; // Super bright sky blue path
+        ctx.lineWidth = 55;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
         ctx.moveTo(GameState.boardCells[1].x, GameState.boardCells[1].y);
@@ -396,10 +381,10 @@ function renderLoop(time) {
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.strokeStyle = '#A1887F';
-        ctx.lineWidth = 6;
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 10;
         ctx.lineJoin = 'round';
-        ctx.setLineDash([15, 20]);
+        ctx.setLineDash([20, 30]);
         ctx.moveTo(GameState.boardCells[1].x, GameState.boardCells[1].y);
         for (let i = 2; i <= BOARD_SIZE; i++) {
             ctx.lineTo(GameState.boardCells[i].x, GameState.boardCells[i].y);
@@ -408,7 +393,7 @@ function renderLoop(time) {
         ctx.setLineDash([]);
     }
 
-    // Dibujar Casillas
+    // Dibujar Casillas Muy Bubbly
     for (let i = 1; i <= BOARD_SIZE; i++) {
         const cell = GameState.boardCells[i];
         if (!cell) continue;
@@ -417,50 +402,56 @@ function renderLoop(time) {
         ctx.arc(cell.x, cell.y, cell.radius, 0, Math.PI * 2);
         
         let color = '#FFF9C4'; 
-        let bColor = '#FBC02D'; 
+        let bColor = '#FFE082'; 
         
-        if (i === 1) { color = '#A5D6A7'; bColor = '#388E3C'; }
-        else if (i === BOARD_SIZE) { color = '#FFE082'; bColor = '#FF8F00'; }
+        if (i === 1) { color = '#C8E6C9'; bColor = '#A5D6A7'; } // Mint Green Entry
+        else if (i === BOARD_SIZE) { color = '#FFF59D'; bColor = '#FFD54F'; } // Yellow Goal
         else if (SPECIAL_SQUARES[i]) {
-             if (SPECIAL_SQUARES[i].type === 'OCA') { color = '#FFCC80'; bColor = '#EF6C00'; }
-             else if (SPECIAL_SQUARES[i].type === 'PUENTE') { color = '#81D4FA'; bColor = '#0288D1'; }
-             else if (SPECIAL_SQUARES[i].type === 'CALAVERA') { color = '#EEEEEE'; bColor = '#424242'; }
-             else { color = '#CE93D8'; bColor = '#8E24AA'; } // Posadas, carcel, etc.
+             if (SPECIAL_SQUARES[i].type === 'OCA') { color = '#FFCC80'; bColor = '#FFA726'; } // Orange Goose
+             else if (SPECIAL_SQUARES[i].type === 'PUENTE') { color = '#B3E5FC'; bColor = '#4FC3F7'; } // Blue Bridge
+             else if (SPECIAL_SQUARES[i].type === 'CALAVERA') { color = '#F5F5F5'; bColor = '#E0E0E0'; } 
+             else { color = '#E1BEE7'; bColor = '#CE93D8'; } // Pinks
         }
 
         ctx.fillStyle = color;
         ctx.fill();
         ctx.strokeStyle = bColor;
-        ctx.lineWidth = 6;
+        ctx.lineWidth = 8;
         ctx.stroke();
 
-        ctx.fillStyle = '#4E342E';
-        const fontSize = cell.radius * 0.8;
+        // Cute highlight inner rim
+        ctx.beginPath();
+        ctx.arc(cell.x, cell.y, cell.radius - 8, 0, Math.PI, true);
+        ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        ctx.fillStyle = '#5D4037';
+        const fontSize = cell.radius * 0.9;
         ctx.font = `bold ${fontSize}px Fredoka, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
         let dispText = i;
-        if(i === 63) dispText = '🏆';
+        if(i === 63) dispText = '👑';
         else if (SPECIAL_SQUARES[i]) {
             if (SPECIAL_SQUARES[i].type === 'OCA') dispText = '🦆';
-            else if (SPECIAL_SQUARES[i].type === 'PUENTE') dispText = '🌉';
-            else if (SPECIAL_SQUARES[i].type === 'CALAVERA') dispText = '💀';
-            else if (SPECIAL_SQUARES[i].type === 'POSADA') dispText = '🛌';
+            else if (SPECIAL_SQUARES[i].type === 'PUENTE') dispText = '🌈';
+            else if (SPECIAL_SQUARES[i].type === 'CALAVERA') dispText = '👻';
+            else if (SPECIAL_SQUARES[i].type === 'POSADA') dispText = '💤';
             else if (SPECIAL_SQUARES[i].type === 'POZO') dispText = '🕳️';
-            else if (SPECIAL_SQUARES[i].type === 'LABERINTO') dispText = '🌀';
+            else if (SPECIAL_SQUARES[i].type === 'LABERINTO') dispText = '😵';
             else if (SPECIAL_SQUARES[i].type === 'CARCEL') dispText = '⛓️';
         }
-        ctx.fillText(dispText, cell.x, cell.y + (dispText == i ? 3 : 0));
+        ctx.fillText(dispText, cell.x, cell.y + (dispText == i ? 5 : 0));
     }
 
-    // Animación de jugadores (Velocidad constante ajustada al Virtual Space)
     if (animatingPlayer && activePath.length > 0) {
         const targetInd = activePath[pathIndex];
         const targetCell = GameState.boardCells[targetInd];
         
         if(targetCell) {
-            const speed = 600 * dt; // Units per second
+            const speed = 700 * dt; // bouncy fast speed
             const dx = targetCell.x - animatingPlayer.visualPos.x;
             const dy = targetCell.y - animatingPlayer.visualPos.y;
             const dist = Math.sqrt(dx*dx + dy*dy);
@@ -477,7 +468,6 @@ function renderLoop(time) {
         }
     }
 
-    // Dibujar Fichas (Skins) con colisiones visuales
     const grouped = {};
     GameState.players.forEach(p => {
         const posKey = p === animatingPlayer ? 'anim' : p.pos;
@@ -487,29 +477,35 @@ function renderLoop(time) {
 
     GameState.players.forEach(p => {
         let {x, y} = p.visualPos;
-        let pSize = 24;
+        let pSize = 34; // HUGE cute pieces
 
         const myGroup = p === animatingPlayer ? [] : grouped[p.pos];
         if (myGroup && myGroup.length > 1) {
             const index = myGroup.indexOf(p);
             const total = myGroup.length;
             const angle = (index / total) * Math.PI * 2;
-            const distance = pSize * 0.9;
+            const distance = pSize * 0.8;
             x += Math.cos(angle) * distance;
             y += Math.sin(angle) * distance;
-            pSize *= 0.85;
+            pSize *= 0.75;
         }
 
+        ctx.shadowColor = 'rgba(0,0,0,0.2)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetY = 6;
+        
         ctx.beginPath();
         ctx.arc(x, y, pSize, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
+        ctx.fillStyle = '#FFFFFF'; // White bubbles
         ctx.fill();
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = '#FFFFFF';
+        
+        ctx.shadowColor = 'transparent';
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = p.color;
         ctx.stroke();
 
         ctx.fillStyle = '#000';
-        ctx.font = `${pSize * 1.3}px sans-serif`;
+        ctx.font = `${pSize * 1.5}px sans-serif`;
         ctx.fillText(p.skin, x, y + pSize * 0.15);
     });
 
