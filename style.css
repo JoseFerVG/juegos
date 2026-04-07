@@ -1,0 +1,156 @@
+:root {
+  /* Bubbly Fun Palette */
+  --bg-sky: #4fc3f7;
+  --bg-sky-light: #e1f5fe;
+  
+  --p-rojo: #FF5252;
+  --p-azul: #29B6F6;
+  --p-verde: #66BB6A;
+  --p-amarillo: #FFEE58;
+  --p-rosa: #FF80AB;
+  --p-purpura: #b388ff;
+
+  --border-bubbly: #0288D1;
+  --text-main: #4E342E;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  width: 100%; height: 100vh; height: 100dvh; 
+  font-family: 'Fredoka', cursive, sans-serif;
+  background: linear-gradient(180deg, var(--bg-sky) 0%, var(--bg-sky-light) 100%);
+  color: var(--text-main);
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+/* Beautiful seamless clouds */
+.clouds {
+  position: fixed; top: 0; left: 0; width: 400%; height: 50%;
+  background: transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50" opacity="0.6"><path d="M 20 25 a 10 10 0 0 1 15 -10 a 15 15 0 0 1 25 5 a 12 12 0 0 1 10 15 q 0 5 -5 5 h -40 q -10 0 -5 -15" fill="white"/></svg>') repeat-x;
+  background-size: auto 200px;
+  animation: floatClouds 90s linear infinite;
+  z-index: 1; pointer-events: none;
+}
+
+@keyframes floatClouds {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Base Layout */
+.container {
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  min-height: 100%; padding: 40px 20px;
+  position: relative; z-index: 10;
+  max-width: 1200px; margin: 0 auto;
+}
+
+/* Main Hub Logo */
+.hub-header {
+  text-align: center; margin-bottom: 50px;
+  animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hub-title {
+  font-size: 4.5rem; color: #FFF;
+  -webkit-text-stroke: 3px var(--border-bubbly);
+  text-shadow: 4px 4px 0 var(--border-bubbly), 0 10px 15px rgba(2, 136, 209, 0.4);
+  line-height: 1.1; margin-bottom: 10px;
+}
+
+.hub-subtitle {
+  font-size: 1.8rem; color: #0288D1; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 2px; text-shadow: 1px 1px 0 #FFF;
+}
+
+/* Game Grid */
+.games-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px; width: 100%; padding: 20px;
+}
+
+/* Individual Game Card */
+.game-card {
+  background-color: #FFFFFF; border: 8px solid var(--border-bubbly);
+  border-radius: 40px; text-decoration: none; display: flex; flex-direction: column;
+  align-items: center; padding: 30px; box-shadow: 0 15px 0 rgba(2, 136, 209, 0.25);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.1s; }
+.game-card:nth-child(2) { animation-delay: 0.2s; }
+.game-card:nth-child(3) { animation-delay: 0.3s; }
+
+.game-card:hover {
+  transform: translateY(-15px) scale(1.05);
+  box-shadow: 0 20px 0 rgba(2, 136, 209, 0.2), 0 30px 40px rgba(0,0,0,0.15);
+}
+
+.game-card:active {
+  transform: translateY(5px) scale(0.98);
+  box-shadow: 0 5px 0 rgba(2, 136, 209, 0.4);
+}
+
+/* Card Icons */
+.icon-box {
+  width: 130px; height: 130px; border-radius: 35px;
+  display: flex; justify-content: center; align-items: center;
+  font-size: 5rem; border: 6px solid #FFF; border-bottom-width: 10px;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1); margin-bottom: 20px;
+}
+.icon-box.oca-bg { background-color: var(--p-amarillo); border-color: #FBC02D; }
+.icon-box.qeq-bg { background-color: var(--p-rosa); border-color: #F06292; }
+.icon-box.soon-bg { background-color: #EEEEEE; border-color: #BDBDBD; filter: grayscale(1); }
+
+/* Card Content */
+.card-title {
+  font-size: 2.2rem; color: var(--border-bubbly); font-weight: 900;
+  text-align: center; margin-bottom: 10px; line-height: 1.1;
+  text-shadow: 2px 2px 0 #E1F5FE;
+}
+
+.card-desc {
+  font-size: 1.2rem; color: #5D4037; font-weight: 700;
+  text-align: center; margin-bottom: 20px; min-height: 50px;
+}
+
+/* Jugar Button */
+.play-btn {
+  background: var(--p-verde); border: 4px solid #388E3C; border-bottom-width: 8px;
+  border-radius: 50px; color: white; font-family: inherit; font-size: 1.6rem; font-weight: 800;
+  padding: 12px 30px; display: inline-block; width: 100%; text-align: center;
+  letter-spacing: 1px; text-shadow: 2px 2px 0 #2E7D32; transition: all 0.1s;
+}
+
+/* Styling for "Soon" card */
+.game-card.soon-card {
+  border-color: #9E9E9E; box-shadow: 0 15px 0 rgba(158, 158, 158, 0.25);
+  cursor: default; pointer-events: none;
+}
+.game-card.soon-card .card-title { color: #757575; text-shadow: none; }
+.game-card.soon-card .play-btn { background: #BDBDBD; border-color: #9E9E9E; text-shadow: none; color: #FAFAFA; }
+
+
+/* Animations */
+@keyframes bounceIn {
+  0% { transform: scale(0.5) translateY(-50px); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes popUp {
+  0% { transform: scale(0.6) translateY(60px); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .hub-title { font-size: 3rem; -webkit-text-stroke: 2px var(--border-bubbly); }
+  .hub-subtitle { font-size: 1.2rem; }
+  .games-grid { grid-template-columns: 1fr; padding: 10px; }
+  .icon-box { width: 110px; height: 110px; font-size: 4rem; }
+}

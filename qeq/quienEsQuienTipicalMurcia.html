@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Murcia: ¿Quién es Quién? - Edición Costumbrista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Murcia: ¿Quién es Quién?</h1>
+    <p>Acho, ¿tú quién te crees que es el personaje misterioso?</p>
+    <div class="controls">
+        <button class="btn" onclick="resetGame()">Barajar y Repartir</button>
+    </div>
+</header>
+
+<main>
+    <div class="board" id="gameBoard"></div>
+</main>
+
+<footer>
+    <p>Desarrollado con rigor académico, ironía y mucho limón en la Región de Murcia.</p>
+</footer>
+
+<script>
+    // Se han asignado emojis específicos para darle riqueza visual inmediata
+    const characters = [
+        { name: 'El Limón', desc: '¡Para todo!', emoji: '🍋' },
+        { name: 'Acho', desc: 'Palabra comodín.', emoji: '🗣️' },
+        { name: 'Pijo', desc: 'Otra más.', emoji: '💁‍♂️' },
+        { name: 'La Marinera', desc: 'Tapa reina.', emoji: '🥖' },
+        { name: 'El Marinero', desc: 'Rey de las tapas.', emoji: '🐟' },
+        { name: 'El Paparajote', desc: 'Postre divino.', emoji: '🍃' },
+        { name: 'El Pastel de Carne', desc: 'Manjar murciano.', emoji: '🥧' },
+        { name: 'Ensalada Murciana', desc: 'Frescura pura.', emoji: '🥗' },
+        { name: 'El Michirón', desc: 'Sabor intenso.', emoji: '🍲' },
+        { name: 'El Zarangollo', desc: 'Revuelto delicioso.', emoji: '🍳' },
+        { name: 'El Caldero', desc: 'Arroz del Mar Menor.', emoji: '🥘' },
+        { name: 'La Huerta', desc: 'Nuestro orgullo.', emoji: '🚜' },
+        { name: 'Bando de la Huerta', desc: 'Fiesta grande.', emoji: '🎉' },
+        { name: 'Entierro Sardina', desc: 'Fuego y mitología.', emoji: '🔥' },
+        { name: 'La Catedral', desc: 'Joya barroca.', emoji: '⛪' },
+        { name: 'El Real Casino', desc: 'Pura elegancia.', emoji: '🎰' },
+        { name: 'El Teatro Romea', desc: 'Cultura en vena.', emoji: '🎭' },
+        { name: 'La Fuensanta', desc: 'La patrona.', emoji: '👑' },
+        { name: 'El Mar Menor', desc: 'Nuestra laguna.', emoji: '🌊' },
+        { name: 'La Manga', desc: 'Paraíso veraniego.', emoji: '🏖️' },
+        { name: 'El Calor', desc: 'A 40 grados a la sombra.', emoji: '🥵' },
+        { name: 'La Solanera', desc: 'El sol que pega.', emoji: '☀️' },
+        { name: 'El Jubilado', desc: 'Supervisor de obras.', emoji: '👴' },
+        { name: 'La Abuela', desc: 'Armada con tupper.', emoji: '👵' }
+    ];
+
+    let secretCharacter = null;
+
+    function createCard(character) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        // Interacción: al hacer clic, alterna la clase para "tumbar" o "levantar" la carta
+        card.onclick = () => card.classList.toggle('eliminated');
+
+        const emojiContainer = document.createElement('div');
+        emojiContainer.className = 'card-emoji';
+        emojiContainer.innerText = character.emoji;
+        
+        const content = document.createElement('div');
+        content.className = 'card-content';
+
+        const name = document.createElement('div');
+        name.className = 'card-name';
+        name.innerText = character.name;
+
+        const desc = document.createElement('div');
+        desc.className = 'card-desc';
+        desc.innerText = character.desc;
+
+        content.appendChild(name);
+        content.appendChild(desc);
+        
+        card.appendChild(emojiContainer);
+        card.appendChild(content);
+
+        return card;
+    }
+
+    function renderBoard() {
+        const board = document.getElementById('gameBoard');
+        board.innerHTML = '';
+        
+        // Pequeño truco para que las cartas aparezcan con un efecto de cascada
+        characters.forEach((character, index) => {
+            const card = createCard(character);
+            card.style.animationDelay = `${index * 0.03}s`;
+            board.appendChild(card);
+        });
+    }
+
+    function resetGame() {
+        // Selecciona un personaje al azar de la matriz
+        secretCharacter = characters[Math.floor(Math.random() * characters.length)];
+        renderBoard();
+        
+        // Console log para depurar como un buen dev
+        console.log('🤫 El personaje secreto seleccionado es:', secretCharacter.name);
+    }
+
+    // Inicializar el juego al cargar
+    document.addEventListener('DOMContentLoaded', resetGame);
+</script>
+
+</body>
+</html>

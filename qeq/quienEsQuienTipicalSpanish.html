@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Costumbrismo: ¿Quién es Quién?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <h1>Costumbrismo: ¿Quién es Quién?</h1>
+            <p>Selecciona un elemento para descartarlo del tablero</p>
+        </div>
+        <button class="reset-btn" onclick="initGame()">Reiniciar Mesa</button>
+    </header>
+
+    <main class="board-container" id="board"></main>
+
+    <script>
+        const elementos = [
+            { id: 1, titulo: "Limón a todo", categoria: "Murcia", icono: "🍋" },
+            { id: 2, titulo: "Tranvía a Espinardo", categoria: "Murcia", icono: "🚋" },
+            { id: 3, titulo: "La Marinera", categoria: "Murcia", icono: "🥨" },
+            { id: 4, titulo: "Acho, pijo", categoria: "Murcia", icono: "🗣️" },
+            { id: 5, titulo: "Pastel de Carne", categoria: "Murcia", icono: "🥧" },
+            { id: 6, titulo: "El Paparajote", categoria: "Murcia", icono: "🍃" },
+            { id: 7, titulo: "Tortilla con Cebolla", categoria: "España", icono: "🍳" },
+            { id: 8, titulo: "Mirar Obras", categoria: "España", icono: "👴" },
+            { id: 9, titulo: "El Gotelé", categoria: "España", icono: "🧱" },
+            { id: 10, titulo: "Tupper de la abuela", categoria: "España", icono: "🍱" },
+            { id: 11, titulo: "Bajar la persiana", categoria: "España", icono: "🪟" },
+            { id: 12, titulo: "Cuñado en Navidad", categoria: "España", icono: "🍷" },
+            { id: 13, titulo: "Siesta con el Tour", categoria: "España", icono: "🚴" },
+            { id: 14, titulo: "La Fregona", categoria: "España", icono: "🧹" },
+            { id: 15, titulo: "El 'Ya si eso...'", categoria: "España", icono: "⏳" },
+            { id: 16, titulo: "Calor de Agosto", categoria: "Murcia", icono: "🥵" }
+        ];
+
+        let estadoJuego = [];
+
+        function initGame() {
+            estadoJuego = elementos.map(e => ({ ...e, descartada: false }));
+            renderBoard();
+        }
+
+        function renderBoard() {
+            const board = document.getElementById('board');
+            board.innerHTML = ''; 
+
+            estadoJuego.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `card ${item.descartada ? 'discarded' : ''}`;
+                card.style.animationDelay = `${index * 0.05}s`;
+                card.onclick = () => toggleDiscard(item.id);
+
+                card.innerHTML = `
+                    <div class="card-emoji-wrapper">${item.icono}</div>
+                    <div class="card-info">
+                        <h3>${item.titulo}</h3>
+                        <p>${item.categoria}</p>
+                    </div>
+                `;
+                board.appendChild(card);
+            });
+        }
+
+        function toggleDiscard(id) {
+            estadoJuego = estadoJuego.map(item => 
+                item.id === id ? { ...item, descartada: !item.descartada } : item
+            );
+            renderBoard(); 
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>

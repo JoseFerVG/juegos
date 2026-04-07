@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Hemiciclo: ¿Quién es Quién? (Tablero Digital Manual)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>El Hemiciclo: ¿Quién es Quién?</h1>
+            <p>Tablero digital manual para jugar contra otra persona. ¡Comunícate por WhatsApp o voz!</p>
+        </div>
+        <div class="controls">
+            <button class="reset-btn" onclick="initGame()">Reiniciar Tablero</button>
+        </div>
+    </header>
+
+    <main class="board-container" id="board">
+        </main>
+
+    <script>
+        // Estructura de Datos con Imágenes Reales (API Proxy a Twitter/Wikipedia)
+        const politicos = [
+            { id: 1, nombre: "Pedro Sánchez", partido: "PSOE", img: "https://unavatar.io/twitter/sanchezcastejon" },
+            { id: 2, nombre: "Alberto N. Feijóo", partido: "PP", img: "https://unavatar.io/twitter/NunezFeijoo" },
+            { id: 3, nombre: "Yolanda Díaz", partido: "Sumar", img: "https://unavatar.io/twitter/Yolanda_Diaz_" },
+            { id: 4, nombre: "Santiago Abascal", partido: "Vox", img: "https://unavatar.io/twitter/Santi_ABASCAL" },
+            { id: 5, nombre: "Isabel D. Ayuso", partido: "PP", img: "https://unavatar.io/twitter/IdiazAyuso" },
+            { id: 6, nombre: "Mariano Rajoy", partido: "PP", img: "https://unavatar.io/twitter/marianorajoy" },
+            { id: 7, nombre: "Pablo Iglesias", partido: "Podemos", img: "https://unavatar.io/twitter/PabloIglesias" },
+            { id: 8, nombre: "C. Puigdemont", partido: "Junts", img: "https://unavatar.io/twitter/KRLS" },
+            { id: 9, nombre: "Oriol Junqueras", partido: "ERC", img: "https://unavatar.io/twitter/junqueras" },
+            { id: 10, nombre: "Gabriel Rufián", partido: "ERC", img: "https://unavatar.io/twitter/gabrielrufian" },
+            { id: 11, nombre: "Iñigo Errejón", partido: "Sumar", img: "https://unavatar.io/twitter/ierrejon" },
+            { id: 12, nombre: "Irene Montero", partido: "Podemos", img: "https://unavatar.io/twitter/IreneMontero" },
+            { id: 13, nombre: "Cuca Gamarra", partido: "PP", img: "https://unavatar.io/twitter/cucagamarra" },
+            { id: 14, nombre: "Aitor Esteban", partido: "PNV", img: "https://unavatar.io/twitter/AITOR_ESTEBAN" },
+            { id: 15, nombre: "J.L.R. Zapatero", partido: "PSOE", img: "https://unavatar.io/wikipedia/José_Luis_Rodríguez_Zapatero" },
+            { id: 16, nombre: "José María Aznar", partido: "PP", img: "https://unavatar.io/wikipedia/José_María_Aznar" }
+        ];
+
+        let estadoPoliticos = [];
+
+        function initGame() {
+            // Reinicia el estado visual
+            estadoPoliticos = politicos.map(p => ({ ...p, descartado: false }));
+            renderBoard();
+        }
+
+        function renderBoard() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+
+            estadoPoliticos.forEach(pol => {
+                const card = document.createElement('div');
+                card.className = `card ${pol.descartado ? 'discarded' : ''}`;
+                
+                // Al hacer clic, alterna el estado descartado
+                card.onclick = () => toggleDiscard(pol.id);
+
+                card.innerHTML = `
+                    <img src="${pol.img}" alt="${pol.nombre}" loading="lazy">
+                    <h3>${pol.nombre}</h3>
+                    <p>${pol.partido}</p>
+                `;
+                board.appendChild(card);
+            });
+        }
+
+        function toggleDiscard(id) {
+            estadoPoliticos = estadoPoliticos.map(pol => {
+                if (pol.id === id) {
+                    return { ...pol, descartado: !pol.descartado };
+                }
+                return pol;
+            });
+            renderBoard();
+        }
+
+        // Inicializar al cargar
+        window.onload = initGame;
+    </script>
+</body>
+</html>

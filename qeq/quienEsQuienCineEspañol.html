@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cine Español: ¿Quién es Quién?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>Cine Español: ¿Quién es Quién?</h1>
+            <p>Tablero digital manual. Haz clic en los pósters para descartar películas.</p>
+        </div>
+        <div class="controls">
+            <button class="reset-btn" onclick="initGame()">Reiniciar Cartelera</button>
+        </div>
+    </header>
+
+    <main class="board-container" id="board"></main>
+
+    <script>
+        // Array de películas sin URLs estáticas. La imagen se generará dinámicamente.
+        const peliculas = [
+            { id: 1, titulo: "Bienvenido Mister Marshall", director: "L.G. Berlanga", año: 1953 },
+            { id: 2, titulo: "Muerte de un ciclista", director: "J.A. Bardem", año: 1955 },
+            { id: 3, titulo: "El verdugo", director: "L.G. Berlanga", año: 1963 },
+            { id: 4, titulo: "La escopeta nacional", director: "L.G. Berlanga", año: 1978 },
+            { id: 5, titulo: "Mujeres al borde de un ataque...", director: "P. Almodóvar", año: 1988 },
+            { id: 6, titulo: "¡Ay, Carmela!", director: "C. Saura", año: 1990 },
+            { id: 7, titulo: "Jamón, jamón", director: "B. Luna", año: 1992 },
+            { id: 8, titulo: "Tesis", director: "A. Amenábar", año: 1996 },
+            { id: 9, titulo: "Torrente", director: "S. Segura", año: 1998 },
+            { id: 10, titulo: "Todo sobre mi madre", director: "P. Almodóvar", año: 1999 },
+            { id: 11, titulo: "La comunidad", director: "A. de la Iglesia", año: 2000 },
+            { id: 12, titulo: "Hable con ella", director: "P. Almodóvar", año: 2002 },
+            { id: 13, titulo: "Mar adentro", director: "A. Amenábar", año: 2004 },
+            { id: 14, titulo: "El laberinto del fauno", director: "G. del Toro", año: 2006 },
+            { id: 15, titulo: "[REC]", director: "Plaza/Balagueró", año: 2007 },
+            { id: 16, titulo: "Ocho apellidos vascos", director: "E. Martínez-Lázaro", año: 2014 }
+        ];
+
+        let estadoJuego = [];
+
+        // Generador dinámico de pósters tipográficos a prueba de fallos
+        function generatePosterUrl(titulo) {
+            // Reemplaza los espacios por saltos de línea para que el texto cuadre en el póster
+            const tituloFormateado = titulo.split(' ').join('\\n');
+            // Llama a la API de placehold.co con los colores del modo oscuro (fondo 1a1a1a, texto e50914)
+            return `https://placehold.co/400x600/1a1a1a/e50914.png?text=${encodeURIComponent(tituloFormateado)}&font=Fredoka`;
+        }
+
+        function initGame() {
+            estadoJuego = peliculas.map(p => ({ ...p, descartada: false }));
+            renderBoard();
+        }
+
+        function renderBoard() {
+            const board = document.getElementById('board');
+            board.innerHTML = ''; 
+
+            estadoJuego.forEach(pelicula => {
+                const card = document.createElement('div');
+                card.className = `card ${pelicula.descartada ? 'discarded' : ''}`;
+                card.onclick = () => toggleDiscard(pelicula.id);
+
+                const posterUrl = generatePosterUrl(pelicula.titulo);
+
+                card.innerHTML = `
+                    <div class="card-img-wrapper">
+                        <img src="${posterUrl}" alt="Póster generado de ${pelicula.titulo}">
+                    </div>
+                    <div class="card-info">
+                        <h3>${pelicula.titulo}</h3>
+                        <p>${pelicula.director} (${pelicula.año})</p>
+                    </div>
+                `;
+                board.appendChild(card);
+            });
+        }
+
+        function toggleDiscard(id) {
+            estadoJuego = estadoJuego.map(pelicula => {
+                if (pelicula.id === id) {
+                    return { ...pelicula, descartada: !pelicula.descartada };
+                }
+                return pelicula;
+            });
+            renderBoard(); 
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>

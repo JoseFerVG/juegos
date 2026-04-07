@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quién es Quién: El Hemiciclo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="control-panel">
+            <div class="header">
+                <h1>El Hemiciclo</h1>
+                <p>Descubre al político secreto.</p>
+            </div>
+
+            <div class="log-box" id="logBox">
+                <div style="color: #666; font-style: italic; text-align:center; margin-top: auto; margin-bottom: auto;">
+                    El debate comienza ahora.<br>Haz tu primera pregunta.
+                </div>
+            </div>
+
+            <div class="question-controls">
+                <select id="questionSelect">
+                    <option value="" disabled selected>Selecciona una pregunta...</option>
+                    <option value="genero|Hombre">¿Es hombre?</option>
+                    <option value="genero|Mujer">¿Es mujer?</option>
+                    <option value="gafas|true">¿Lleva gafas?</option>
+                    <option value="barba_bigote|true">¿Tiene barba o bigote?</option>
+                    <option value="ha_sido_presidente|true">¿Ha sido Presidente del Gobierno?</option>
+                    <option value="bloque|Izquierda">¿Pertenece al bloque de izquierdas (PSOE, Sumar, Podemos, ERC)?</option>
+                    <option value="bloque|Derecha">¿Pertenece al bloque de derechas (PP, Vox)?</option>
+                    <option value="nacionalista|true">¿Es de un partido nacionalista/independentista (ERC, Junts, PNV)?</option>
+                </select>
+                <button onclick="askQuestion()">Preguntar</button>
+            </div>
+        </aside>
+
+        <main class="board-container" id="board">
+            </main>
+    </div>
+
+    <div class="modal-overlay" id="resultModal">
+        <div class="modal-content" id="modalContent">
+            <h2 id="modalTitle">Resultado</h2>
+            <p id="modalText">Mensaje</p>
+            <button onclick="initGame()">Jugar de nuevo</button>
+        </div>
+    </div>
+
+    <script>
+        // Estructura de Datos Base
+        const politicos = [
+            { id: 1, nombre: "Pedro Sánchez", partido: "PSOE", gafas: false, barba_bigote: false, genero: "Hombre", ha_sido_presidente: true, bloque: "Izquierda", nacionalista: false },
+            { id: 2, nombre: "Alberto N. Feijóo", partido: "PP", gafas: true, barba_bigote: false, genero: "Hombre", ha_sido_presidente: false, bloque: "Derecha", nacionalista: false },
+            { id: 3, nombre: "Yolanda Díaz", partido: "Sumar", gafas: false, barba_bigote: false, genero: "Mujer", ha_sido_presidente: false, bloque: "Izquierda", nacionalista: false },
+            { id: 4, nombre: "Santiago Abascal", partido: "Vox", gafas: false, barba_bigote: true, genero: "Hombre", ha_sido_presidente: false, bloque: "Derecha", nacionalista: false },
+            { id: 5, nombre: "Isabel D. Ayuso", partido: "PP", gafas: false, barba_bigote: false, genero: "Mujer", ha_sido_presidente: false, bloque: "Derecha", nacionalista: false },
+            { id: 6, nombre: "Mariano Rajoy", partido: "PP", gafas: true, barba_bigote: true, genero: "Hombre", ha_sido_presidente: true, bloque: "Derecha", nacionalista: false },
+            { id: 7, nombre: "Pablo Iglesias", partido: "Podemos", gafas: false, barba_bigote: true, genero: "Hombre", ha_sido_presidente: false, bloque: "Izquierda", nacionalista: false },
+            { id: 8, nombre: "C. Puigdemont", partido: "Junts", gafas: true, barba_bigote: false, genero: "Hombre", ha_sido_presidente: false, bloque: "Otro", nacionalista: true },
+            { id: 9, nombre: "Oriol Junqueras", partido: "ERC", gafas: true, barba_bigote: true, genero: "Hombre", ha_sido_presidente: false, bloque: "Izquierda", nacionalista: true },
+            { id: 10, nombre: "Gabriel Rufián", partido: "ERC", gafas: false, barba_bigote: true, genero: "Hombre", ha_sido_presidente: false, bloque: "Izquierda", nacionalista: true },
+            { id: 11, nombre: "Iñigo Errejón", partido: "Sumar", gafas: true, barba_bigote: false, genero: "Hombre", ha_sido_presidente: false, bloque: "Izquierda", nacionalista: false },
+            { id: 12, nombre: "Irene Montero", partido: "Podemos", gafas: false, barba_bigote: false, genero: "Mujer", ha_sido_presidente: false, bloque: "Izquierda", nacionalista: false },
+            { id: 13, nombre: "Cuca Gamarra", partido: "PP", gafas: false, barba_bigote: false, genero: "Mujer", ha_sido_presidente: false, bloque: "Derecha", nacionalista: false },
+            { id: 14, nombre: "Aitor Esteban", partido: "PNV", gafas: false, barba_bigote: true, genero: "Hombre", ha_sido_presidente: false, bloque: "Otro", nacionalista: true },
+            { id: 15, nombre: "J.L.R. Zapatero", partido: "PSOE", gafas: false, barba_bigote: false, genero: "Hombre", ha_sido_presidente: true, bloque: "Izquierda", nacionalista: false },
+            { id: 16, nombre: "José María Aznar", partido: "PP", gafas: false, barba_bigote: true, genero: "Hombre", ha_sido_presidente: true, bloque: "Derecha", nacionalista: false }
+        ];
+
+        let personajeSecreto = null;
+        let estadoPoliticos = [];
+
+        // Genera imagen placeholder usando iniciales (UI Avatars)
+        function getAvatarUrl(nombre) {
+            return `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&background=2c2c2c&color=ffffff&size=150&font-size=0.4&bold=true`;
+        }
+
+        function initGame() {
+            // Selecciona el objetivo aleatorio
+            personajeSecreto = politicos[Math.floor(Math.random() * politicos.length)];
+            
+            // Reinicia el estado visual (ninguno descartado)
+            estadoPoliticos = politicos.map(p => ({ ...p, descartado: false }));
+            
+            // Limpia UI
+            document.getElementById('logBox').innerHTML = '<div style="color: #666; font-style: italic; text-align:center; margin-top: auto; margin-bottom: auto;">El debate comienza ahora.<br>Haz tu primera pregunta.</div>';
+            document.getElementById('questionSelect').selectedIndex = 0;
+            document.getElementById('resultModal').classList.remove('active');
+            
+            renderBoard();
+            console.log("Modo debug. Objetivo:", personajeSecreto.nombre); // Solo para desarrollo
+        }
+
+        function renderBoard() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+
+            estadoPoliticos.forEach(pol => {
+                const card = document.createElement('div');
+                card.className = `card ${pol.descartado ? 'discarded' : ''}`;
+                card.onclick = () => guessCharacter(pol.id);
+
+                card.innerHTML = `
+                    <img src="${getAvatarUrl(pol.nombre)}" alt="${pol.nombre}">
+                    <h3>${pol.nombre}</h3>
+                    <p>${pol.partido}</p>
+                `;
+                board.appendChild(card);
+            });
+        }
+
+        function askQuestion() {
+            const select = document.getElementById('questionSelect');
+            const value = select.value;
+            if (!value) return;
+
+            // Extraemos la propiedad y el valor esperado
+            const [propiedad, valorStr] = value.split('|');
+            const valorEsperado = (valorStr === 'true') ? true : valorStr;
+
+            // Evaluamos si el personaje secreto cumple la condición
+            const respuesta = (personajeSecreto[propiedad] === valorEsperado);
+
+            registrarLog(select.options[select.selectedIndex].text, respuesta);
+
+            // Filtrado automático: descartamos a los que NO coincidan con la respuesta real
+            estadoPoliticos.forEach(pol => {
+                if (!pol.descartado) {
+                    const cumpleCondicion = (pol[propiedad] === valorEsperado);
+                    if (cumpleCondicion !== respuesta) {
+                        pol.descartado = true;
+                    }
+                }
+            });
+
+            renderBoard();
+            select.selectedIndex = 0;
+            comprobarVictoriaAutomatica();
+        }
+
+        function registrarLog(pregunta, respuesta) {
+            const logBox = document.getElementById('logBox');
+            // Quitamos el mensaje inicial si existe
+            if(logBox.innerHTML.includes('El debate comienza ahora')) {
+                logBox.innerHTML = '';
+            }
+
+            const resClass = respuesta ? 'yes' : 'no';
+            const resText = respuesta ? 'SÍ' : 'NO';
+            
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<strong>P:</strong> ${pregunta} <br> <strong>R:</strong> <span class="${resClass}">${resText}</span>`;
+            
+            logBox.appendChild(entry);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function guessCharacter(id) {
+            const pol = estadoPoliticos.find(p => p.id === id);
+            if (pol.descartado) return; // Si ya está oscuro, no deja clickar por CSS, pero por seguridad.
+
+            if (confirm(`¿Quieres arriesgarte y acusar a ${pol.nombre}?`)) {
+                mostrarResultado(pol.id === personajeSecreto.id, pol.nombre);
+            }
+        }
+
+        function comprobarVictoriaAutomatica() {
+            const activos = estadoPoliticos.filter(p => !p.descartado);
+            if (activos.length === 1) {
+                setTimeout(() => mostrarResultado(true, activos[0].nombre), 500);
+            } else if (activos.length === 0) {
+                // Failsafe por si algo sale mal (no debería ocurrir lógicamente)
+                mostrarResultado(false, "Nadie");
+            }
+        }
+
+        function mostrarResultado(victoria, nombreAdivinado) {
+            const modal = document.getElementById('resultModal');
+            const content = document.getElementById('modalContent');
+            const title = document.getElementById('modalTitle');
+            const text = document.getElementById('modalText');
+
+            modal.classList.add('active');
+            content.className = `modal-content ${victoria ? 'win' : 'lose'}`;
+            
+            if (victoria) {
+                title.innerText = "¡Moción Aprobada!";
+                text.innerText = `Has deducido correctamente que era ${nombreAdivinado}.`;
+            } else {
+                title.innerText = "¡Moción Rechazada!";
+                text.innerText = `Te has equivocado. El personaje secreto era ${personajeSecreto.nombre}.`;
+            }
+        }
+
+        // Inicializar al cargar
+        window.onload = initGame;
+    </script>
+</body>
+</html>
