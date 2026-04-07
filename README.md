@@ -22,23 +22,13 @@
 
 **Juegos Random** es mi rincón lúdico personal. Una colección de juegos de navegador multijugador tipo *Pass & Play*, enfocados en traer las dinámicas de los juegos de mesa tradicionales a la pantalla con una interfaz cuidada, animaciones inmersivas y un estilo *"Bubbly & Cute"*.
 
-Todo el código está concebido bajo una **filosofía limpia**:
-- ✨ **Sin Frameworks pesados**: Todo es HTML Semántico, Canvas, flexbox nativo y Vanilla JavaScript puro.
-- 📱 **Totalmente Responsivo**: Escalado perfecto mediante `aspect-ratio` manteniéndose fiel a la proporción de tablero en cualquier pantalla.
-- 🍪 **Libre de Tracking**: Nada de recolección de datos. Puro entretenimiento *offline-friendly*.
-
----
-
 ## 🚀 Juegos Incluidos
 
 Actualmente el ecosistema cuenta con los siguientes proyectos:
 
 ### 🦆 1. [El Juego de la Oca](./oca)
 Una recreación completa y súper amigable del clásico y cruel juego de tablero.
-Diseñado para de 2 a 4 jugadores que tiran dados sobre un tablero en forma de espiral cuadrado matemáticamente perfecto y blindado.
-- 🎲 **Motor Físico Simulado:** Tira 1 o 2 dados con animaciones dinámicas que rebotan por la pantalla.
-- 🐸 **Burbujas de Jugador:** Avatares XL y estética pastel para hacer el multijugador local mucho más divertido.
-- 🌉 **Lógicas Especiales Reales:** Interpolación precisa LERP en puentes, posada, laberinto, cárcel y "de oca a oca".
+Diseñado para de 2 a 4 jugadores que tiran dados sobre un tablero en forma de espiral cuadrado matemáticamente perfecto y blindado.      
 
 ### 🕵️‍♂️ 2. [Saga "¿Quién es Quién?"](./qeq)
 Un *Hub* con **5 colecciones** temáticas distintas listas para la gran pregunta: "¿Está tu personaje vivo?". Con un sistema de descarte digital que sustituye el tablero de plástico tradicional, donde la tarjeta eliminada baja hacia la mesa y queda tachada por una adorable pegatina de aspa ❌.
